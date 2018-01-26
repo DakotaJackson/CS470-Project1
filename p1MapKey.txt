@@ -1,0 +1,15 @@
+Before L4:
+Width Height [width/height of map]
+StartX StartY [x/y coord at start, w/0,0 at top left]
+GoalX GoalY [x/y coord goal, w/0,0 at top left]
+
+After L4:
+Char | Meaning   | Mvmt Cost
+----------------------------
+R	 | road	     | 1
+f	 | field     | 2
+F	 | forest    | 4
+h	 | hills     | 5
+r	 | river     | 7
+M	 | mountains | 10
+W	 | water	 | can't be entered

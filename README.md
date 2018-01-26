@@ -16,7 +16,7 @@
 ## Compiling/Running
 * Compile with (Windows)
 ```
-go build -o ./bin/pathfind ./pathfinding/
+go build -o ./bin/pathfind ./src/
 ```
 
 * Run with the following flags to denote whitch paths to run
@@ -30,5 +30,7 @@ go build -o ./bin/pathfind ./pathfinding/
 ```
 ./bin/pathfind -[desiredflag]
 ```
-* Note: the `-all` flag will run and create output for each of the flags before
-* Note2: output will be generated in the `tmp/` directory
+* Notes 
+    - the `-all` flag will run and create output for each of the flags before
+    - output will be generated in the `tmp/` directory
+    - only allowed to move NSEW
