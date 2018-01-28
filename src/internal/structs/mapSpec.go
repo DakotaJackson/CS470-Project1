@@ -1,6 +1,7 @@
-package internal
+package structs
 
-type mapSpec struct {
+// MapSpec contains all info for defining the map.
+type MapSpec struct {
 	origMap   [][]int
 	trSpaces  [][]int
 	currTrMap [][]int
