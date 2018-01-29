@@ -2,11 +2,13 @@ package structs
 
 // MapSpec contains all info for defining the map.
 type MapSpec struct {
-	origMap   [][]int
-	trSpaces  [][]int
-	currTrMap [][]int
-	startPosX int
-	startPosY int
-	goalPosX  int
-	goalPosY  int
+	OrigMap   [][]int
+	TrSpaces  [][]int
+	CurrTrMap [][]int
+	StartPosX int
+	StartPosY int
+	GoalPosX  int
+	GoalPosY  int
+	Width     int
+	Height    int
 }

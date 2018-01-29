@@ -35,11 +35,15 @@ func InitGraph(numVerticies int) *Graph {
 
 // MakeGraphFromMap takes in the width and height from the specified map
 // 	and creates all the necessary connections.
-func (g *Graph) MakeGraphFromMap(width, height int) {
-	for i := 0; i < width; i++ {
-		for j := 0; j < height; j++ {
-			// CHANGEME
-			g.ConnectVerticies(i, j)
+func (g *Graph) MakeGraphFromMap(mapDef [][]int, width, height int) {
+	// will connect the NSEW verticies to all parts of the 2d map array
+	// 	(it will ignore the water squares and not connect them)
+
+	// TODO: finish this functionality
+	vertNum := 0
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			vertNum++
 		}
 	}
 }
@@ -50,6 +54,12 @@ func (g *Graph) ConnectVerticies(v1, v2 int) {
 	if v1 != v2 {
 		g.edges[v2].MakeConnection(v1)
 	}
+}
+
+// MakeWeightsFromMap takes the 2d array of weighted movement and adds them
+// 	to the graph data structure.
+func (g *Graph) MakeWeightsFromMap(mapDef [][]int) {
+	// TODO: finish this functionality
 }
 
 // AssignWeight sets the movement penalty for a specific verticy.
