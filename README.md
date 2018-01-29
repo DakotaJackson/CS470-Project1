@@ -16,7 +16,7 @@
 ## Compiling/Running
 * Compile with (Windows)
 ```
-go build -o ./bin/pathfind ./src/
+go build -o ./bin/pathfind ./src/project1/
 ```
 
 * Run with the following flags to denote whitch paths to run
