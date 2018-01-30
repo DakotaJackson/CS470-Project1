@@ -19,16 +19,17 @@
 go build -o ./bin/pathfind ./src/project1/
 ```
 
-* Run with the following flags to denote whitch paths to run
+* Run with the following flags to denote whitch algorithms to run
     - breadth
     - lowCost
     - gBestFirst
     - aEuclidean
     - aOctile
     - all
+* Use the `-map` flag with a string denoting the map.txt file to use
 * No need to pipe output, program will auto-create and generate it for you
 ```
-./bin/pathfind -[desiredflag]
+./bin/pathfind -map p1Map.txt -[desiredflag]
 ```
 * Notes 
     - the `-all` flag will run and create output for each of the flags before

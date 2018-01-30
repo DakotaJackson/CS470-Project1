@@ -43,6 +43,68 @@ func (g *Graph) MakeGraphFromMap(mapDef [][]int, width, height int) {
 	vertNum := 0
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
+			if mapDef[i][j] == 0 {
+				// current vert is water
+				continue
+			} else if i == 0 {
+				// top row
+				if j != width-1 && mapDef[i][j+1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+1) // right
+				}
+				if j != 0 && mapDef[i][j-1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-1) // left
+				}
+				if mapDef[i+1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+width) // below
+				}
+			} else if i == height-1 {
+				// bottom row
+				if j != width-1 && mapDef[i][j+1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+1) // right
+				}
+				if j != 0 && mapDef[i][j-1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-1) // left
+				}
+				if mapDef[i-1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-width) // above
+				}
+			} else if j == 0 {
+				// left col
+				if mapDef[i][j+1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+1) // right
+				}
+				if i != 0 && mapDef[i-1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-width) // above
+				}
+				if i != height-1 && mapDef[i+1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+width) // below
+				}
+			} else if j == width-1 {
+				// right col
+				if mapDef[i][j-1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-1) // left
+				}
+				if i != 0 && mapDef[i-1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-width) // above
+				}
+				if i != height-1 && mapDef[i+1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+width) // below
+				}
+			} else {
+				// all 4 directions can be connected
+				if mapDef[i][j+1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+1) // right
+				}
+				if mapDef[i][j-1] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-1) // left
+				}
+				if mapDef[i-1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum-width) // above
+				}
+				if mapDef[i+1][j] != 0 {
+					g.ConnectVerticies(vertNum, vertNum+width) // below
+				}
+			}
 			vertNum++
 		}
 	}
@@ -58,8 +120,15 @@ func (g *Graph) ConnectVerticies(v1, v2 int) {
 
 // MakeWeightsFromMap takes the 2d array of weighted movement and adds them
 // 	to the graph data structure.
-func (g *Graph) MakeWeightsFromMap(mapDef [][]int) {
+func (g *Graph) MakeWeightsFromMap(mapDef [][]int, width, height int) {
 	// TODO: finish this functionality
+	vertNum := 0
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			g.AssignWeight(vertNum, mapDef[i][j])
+			vertNum++
+		}
+	}
 }
 
 // AssignWeight sets the movement penalty for a specific verticy.

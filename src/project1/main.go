@@ -41,7 +41,11 @@ func main() {
 		log.Fatal("can't create graph from map 2d array", err)
 		return
 	}
-	fmt.Println(graph)
+
+	for i := 0; i < (mapInfo.Width * mapInfo.Height); i++ {
+		z, _ := graph.GetWeight(i)
+		fmt.Println(z)
+	}
 
 	// run the proper command for each flag/algorithm needed
 	if allFlg {
@@ -163,7 +167,7 @@ func createGraph(mapDef [][]int, width, height int) (dataStructs.Graph, error) {
 	numVerticies := width * height
 	g := dataStructs.InitGraph(numVerticies)
 	g.MakeGraphFromMap(mapDef, width, height)
-	g.MakeWeightsFromMap(mapDef)
+	g.MakeWeightsFromMap(mapDef, width, height)
 	return *g, nil
 }
 
