@@ -39,7 +39,6 @@ func (g *Graph) MakeGraphFromMap(mapDef [][]int, width, height int) {
 	// will connect the NSEW verticies to all parts of the 2d map array
 	// 	(it will ignore the water squares and not connect them)
 
-	// TODO: finish this functionality
 	vertNum := 0
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
@@ -121,7 +120,6 @@ func (g *Graph) ConnectVerticies(v1, v2 int) {
 // MakeWeightsFromMap takes the 2d array of weighted movement and adds them
 // 	to the graph data structure.
 func (g *Graph) MakeWeightsFromMap(mapDef [][]int, width, height int) {
-	// TODO: finish this functionality
 	vertNum := 0
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
@@ -156,6 +154,11 @@ func (g *Graph) DoVerticy(verticy int, f func(interface{})) error {
 		return nil
 	}
 	return errors.New("can't execute do, verticy does not exist")
+}
+
+// GetNumVerticies simply returns the number of verticies in the graph
+func (g *Graph) GetNumVerticies() int {
+	return g.verticies
 }
 
 /*

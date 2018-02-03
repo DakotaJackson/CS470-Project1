@@ -6,14 +6,14 @@ package dataStructs
 // Queue is the data structure used for algorithms such as bfs.
 type Queue struct {
 	length int
-	start  *node
-	end    *node
+	start  *nodeQ
+	end    *nodeQ
 }
 
 // node is used in the queue data structure (only using ints for map)
-type node struct {
+type nodeQ struct {
 	value int
-	next  *node
+	next  *nodeQ
 }
 
 // InitQueue creates a blank queue for use elsewhere.
@@ -27,7 +27,7 @@ func InitQueue() *Queue {
 
 // Enqueue adds a node to the end of the queue.
 func (q *Queue) Enqueue(value int) int {
-	n := &node{value, nil}
+	n := &nodeQ{value, nil}
 	if q.length != 0 {
 		// queue has nodes in it
 		q.end.next = n
@@ -71,7 +71,15 @@ func (q *Queue) Peek() (int, bool) {
 	return 0, false
 }
 
-// GetLen returns the length of the queue.
-func (q *Queue) GetLen() int {
+// GetLenQ returns the length of the queue.
+func (q *Queue) GetLenQ() int {
 	return q.length
+}
+
+// IsEmpty returns if the queue is empty or not.
+func (q *Queue) IsEmpty() bool {
+	if q.length <= 0 {
+		return true
+	}
+	return false
 }

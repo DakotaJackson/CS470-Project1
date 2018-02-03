@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/DakotaJackson/CS470-Project1/src/internal/algorithms"
 	"github.com/DakotaJackson/CS470-Project1/src/internal/dataStructs"
 	"github.com/DakotaJackson/CS470-Project1/src/internal/structs"
 )
@@ -33,7 +34,7 @@ func main() {
 		log.Fatal("can't gather initial map info: ", err)
 		return
 	}
-	fmt.Println(mapInfo)
+	//fmt.Println(mapInfo)
 
 	graph, err := createGraph(mapInfo.OrigMap, mapInfo.Width, mapInfo.Height)
 
@@ -42,16 +43,24 @@ func main() {
 		return
 	}
 
-	for i := 0; i < (mapInfo.Width * mapInfo.Height); i++ {
-		z, _ := graph.GetWeight(i)
-		fmt.Println(z)
-	}
-
 	// run the proper command for each flag/algorithm needed
 	if allFlg {
 
 	} else if breadthFlg {
-
+		alg := algorithms.InitBFS(mapInfo, graph)
+		path, err := alg.FindPathBFS()
+		if err != nil {
+			log.Fatal("error in finding bfs path: ", err)
+		}
+		fmt.Println("PATH:", path)
+		order := alg.Order()
+		fmt.Println("ORDER", order)
+		cost := 0
+		for z := 0; z < len(path); z++ {
+			c, _ := graph.GetWeight(z)
+			cost = cost + c.(int)
+		}
+		fmt.Println("MOVEMENT COST", cost)
 	} else if lowCostFlg {
 
 	} else if gBestFirstFlg {
