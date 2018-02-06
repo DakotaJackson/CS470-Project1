@@ -25,6 +25,7 @@ var (
 )
 
 // TODO: CLEAN UP CODE
+// TODO: Ensure visited verticies are good
 func main() {
 	initFlg()
 	flag.Parse()
@@ -55,27 +56,30 @@ func main() {
 
 	} else if breadthFlg {
 		alg := algorithms.InitBFS(mapInfo, graph)
-		path, err := alg.FindPathBFS()
+		output, err := alg.FindPathBFS()
 		if err != nil {
 			log.Fatal("error in finding bfs path: ", err)
 		}
-		fmt.Println("PATH:", path)
-		order := alg.Order()
-		fmt.Println("ORDER", order)
-		cost := 0
-		for z := 0; z < len(path); z++ {
-			c, _ := graph.GetWeight(z)
-			cost = cost + c.(int)
-		}
-		fmt.Println("MOVEMENT COST", cost)
+		output.OrigMap = mapInfo.OrigMap
+		fmt.Println("ORIGMAP:\n", output.OrigMap)
+		fmt.Println("ALG:", output.AlgType)
+		fmt.Println("MOVES:", output.Pmoves)
+		fmt.Println("PATH:", output.Ppath)
+		fmt.Println("VISITED:", output.Pvisited)
+		fmt.Println("COST", output.Pcost)
 	} else if lowCostFlg {
 		alg := algorithms.InitLCS(mapInfo, graph)
-		path, err := alg.FindPathLCS()
+		output, err := alg.FindPathLCS()
 		if err != nil {
 			log.Fatal("error in finding lcs path: ", err)
 		}
-
-		fmt.Println("LCS PATH: ", path)
+		output.OrigMap = mapInfo.OrigMap
+		fmt.Println("ORIGMAP:\n", output.OrigMap)
+		fmt.Println("ALG:", output.AlgType)
+		fmt.Println("MOVES:", output.Pmoves)
+		fmt.Println("PATH:", output.Ppath)
+		fmt.Println("VISITED:", output.Pvisited)
+		fmt.Println("COST", output.Pcost)
 	} else if gBestFirstFlg {
 
 	} else if aEuclideanFlg {
@@ -159,7 +163,7 @@ func gatherMapInfo(mapFile string) (structs.MapSpec, error) {
 				case 'M':
 					mapArray[rowNum][colNum] = 10
 				case 'W':
-					// 0 means can't travel on
+					// 0 means can't travel on (aka water)
 					mapArray[rowNum][colNum] = 0
 				default:
 					mapArray[rowNum][colNum] = -1

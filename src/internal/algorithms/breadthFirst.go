@@ -2,6 +2,7 @@ package algorithms
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/DakotaJackson/CS470-Project1/src/internal/dataStructs"
 	"github.com/DakotaJackson/CS470-Project1/src/internal/structs"
@@ -16,17 +17,18 @@ import (
 // BFSHelper contains all the information needed to conduct the bfs.
 type BFSHelper struct {
 	// needed data structures (graph passed in)
-	queue *dataStructs.Queue
-	stack *dataStructs.Stack
-	graph dataStructs.Graph
+	queue  *dataStructs.Queue
+	stack  *dataStructs.Stack
+	graph  dataStructs.Graph
+	output structs.OutputSpec
 	// start and target verticies (need to be found)
 	startPos  int
 	targetPos int
 	// v[variablename] are used in the bfs
 	vVisited []bool
-	vOrder   []int
 	vParents []int
 	vPaths   map[int][]int
+	success  bool
 }
 
 // InitBFS creates all the necessary info from the graph&mapInfo.
@@ -44,13 +46,12 @@ func InitBFS(mapInfo structs.MapSpec, graph dataStructs.Graph) *BFSHelper {
 
 	// init the needed helper variables
 	helper.vVisited = make([]bool, graph.GetNumVerticies())
-	helper.vOrder = make([]int, 1, graph.GetNumVerticies())
 	helper.vParents = make([]int, graph.GetNumVerticies())
 	helper.vPaths = make(map[int][]int)
+	helper.success = false
 
 	// populate the helper variables with their initial values
 	helper.vVisited[helper.startPos] = true
-	helper.vOrder[0] = helper.startPos
 	helper.queue.Enqueue(helper.startPos)
 
 	// return the newly made bfs helper object
@@ -58,10 +59,11 @@ func InitBFS(mapInfo structs.MapSpec, graph dataStructs.Graph) *BFSHelper {
 }
 
 // FindPathBFS returns an integer slice of the verticies traveled from start to target.
-func (bfs *BFSHelper) FindPathBFS() ([]int, error) {
+func (bfs *BFSHelper) FindPathBFS() (structs.OutputSpec, error) {
+	output := structs.OutputSpec{}
 	// can't reach target (eg. surrounded by water)
 	if !bfs.canReachVerticy(bfs.targetPos) {
-		return nil, errors.New("bfs target verticy is unreachable")
+		return output, errors.New("bfs target verticy is unreachable")
 	}
 
 	if cached, ok := bfs.vPaths[bfs.targetPos]; !ok {
@@ -76,23 +78,27 @@ func (bfs *BFSHelper) FindPathBFS() ([]int, error) {
 		for i := 0; i < len(path); i++ {
 			path[i], exists = bfs.stack.Pop()
 			if !exists {
-				return nil, errors.New("bfs error in popping from stack searching for path")
+				return output, errors.New("bfs error in popping from stack searching for path")
 			}
 		}
 		bfs.vPaths[bfs.targetPos] = path
-		return path, nil
+		output.Ppath = path
+		bfs.success = true
 	} else if cached != nil {
-		return cached, nil
+		output.Ppath = cached
+		bfs.success = true
 	}
-	return nil, errors.New("bfs can't find path")
-}
-
-// Order returns the order of verticies from start to target position.
-func (bfs *BFSHelper) Order() []int {
-	if !bfs.queue.IsEmpty() {
-		bfs.search(-1)
+	if !bfs.success {
+		return output, errors.New("bfs can't find path")
 	}
-	return bfs.vOrder
+	output.Pvisited = bfs.getVisitedVerticies()
+	output.AlgType = "Breadth First Search"
+	output.Pmoves = len(output.Ppath)
+	output.Pcost = bfs.getPathCost(output.Ppath)
+	if output.Pcost == -1 {
+		return output, errors.New("bfs can't find cost of path")
+	}
+	return output, nil
 }
 
 // canReachVerticy checks if the path from start to target is possible.
@@ -103,22 +109,50 @@ func (bfs *BFSHelper) canReachVerticy(target int) bool {
 	return bfs.vVisited[target]
 }
 
+// search executes the actual breadth first search.
 func (bfs *BFSHelper) search(target int) {
+	// execute loop while there is a value in the queue.
 	for !bfs.queue.IsEmpty() {
-		src, exists := bfs.queue.Dequeue()
+		vert, exists := bfs.queue.Dequeue()
 		if exists {
-			bfs.graph.DoVerticy(src, func(peer interface{}) {
+			bfs.graph.DoVerticy(vert, func(peer interface{}) {
 				if p := peer.(int); !bfs.vVisited[p] {
 					bfs.vVisited[p] = true
-					bfs.vOrder = append(bfs.vOrder, p)
-					bfs.vParents[p] = src
+					bfs.vParents[p] = vert
 					bfs.queue.Enqueue(p)
 				}
 			})
 		}
 
-		if target == src {
+		// if node is found, return
+		if target == vert {
 			return
 		}
 	}
+}
+
+// getVisitedVerticies returns all verticies visited for output.
+func (bfs *BFSHelper) getVisitedVerticies() []int {
+	visited := make([]int, 0)
+	for i := 0; i < bfs.graph.GetNumVerticies(); i++ {
+		if bfs.vVisited[i] {
+			visited = append(visited, i)
+		}
+	}
+	return visited
+}
+
+// getPathCost returns the total cost of movement for output.
+func (bfs *BFSHelper) getPathCost(path []int) int {
+	totalCost := 0
+	for _, vert := range path {
+		fmt.Println("vert:", vert)
+		singleCost, err := bfs.graph.GetWeight(vert)
+		if err != nil {
+			return -1
+		}
+		fmt.Println("vert Cost:", singleCost.(int))
+		totalCost += singleCost.(int)
+	}
+	return totalCost
 }

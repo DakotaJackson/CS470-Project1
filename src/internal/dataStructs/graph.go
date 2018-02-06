@@ -47,7 +47,8 @@ func (g *Graph) MakeGraphFromMap(mapDef [][]int, width, height int) {
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
 			if mapDef[i][j] == 0 {
-				// current vert is water
+				// current vert is water (still increment counter)
+				vertNum++
 				continue
 			} else if i == 0 {
 				// top row

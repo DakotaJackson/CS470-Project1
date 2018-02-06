@@ -17,6 +17,7 @@ import (
 type LCSHelper struct {
 	queue     *dataStructs.Queue
 	graph     dataStructs.Graph
+	output    structs.OutputSpec
 	startPos  int
 	targetPos int
 	vVisited  []bool
@@ -47,13 +48,13 @@ func InitLCS(mapInfo structs.MapSpec, graph dataStructs.Graph) *LCSHelper {
 }
 
 // FindPathLCS returns the path found from the lcs search algorithm.
-func (lcs *LCSHelper) FindPathLCS() ([]int, error) {
+func (lcs *LCSHelper) FindPathLCS() (structs.OutputSpec, error) {
+	output := structs.OutputSpec{}
 	// as long as there is an item in the queue, execute the loop
 	for lcs.queue.GetLenQ() > 0 {
 		vert, exists := lcs.queue.Dequeue()
-		fmt.Println("verticy being analyzed:", vert)
 		if !exists {
-			return nil, errors.New("lcs current vert dequeued doesn't exist")
+			return output, errors.New("lcs current vert dequeued doesn't exist")
 		}
 
 		if lcs.vVisited[lcs.targetPos] {
@@ -64,7 +65,7 @@ func (lcs *LCSHelper) FindPathLCS() ([]int, error) {
 		edges := lcs.graph.GetEdgesForVerticy(vert)
 		eWeight, err := lcs.graph.GetWeight(vert)
 		if err != nil {
-			return nil, errors.New("lcs unable to get weight for verticy")
+			return output, errors.New("lcs unable to get weight for verticy")
 		}
 
 		// iterate over and find least cost of each edge from a verticy
@@ -72,13 +73,13 @@ func (lcs *LCSHelper) FindPathLCS() ([]int, error) {
 			dest := val.(int)
 			cost, err := lcs.graph.GetWeight(val.(int))
 			if err != nil {
-				return nil, errors.New("lcs unable to get weight in edges loop")
+				return output, errors.New("lcs unable to get weight in edges loop")
 			}
 			// total cost of moving to tile
 			cost = cost.(int) + eWeight.(int)
 			if tentDist, ok := lcs.vWeights[dest]; !ok || cost.(int) < tentDist {
 				// prevent two nodes mapping to each other
-				if lcs.vPrev[vert] != dest {
+				if lcs.vPrev[vert] != dest && !lcs.vVisited[vert] {
 					lcs.vWeights[dest] = cost.(int)
 					lcs.vPrev[dest] = vert
 					lcs.queue.Enqueue(dest)
@@ -91,13 +92,12 @@ func (lcs *LCSHelper) FindPathLCS() ([]int, error) {
 	}
 
 	if !lcs.vVisited[lcs.targetPos] {
-		return nil, errors.New("lcs unable to reach destination")
+		return output, errors.New("lcs unable to reach destination")
 	}
 
 	// gathers the lowest cost path based on the vPrev map
 	lcs.vPath = append(lcs.vPath, lcs.targetPos)
 	for n, ok := lcs.vPrev[lcs.targetPos]; ok; n = lcs.vPrev[n] {
-		fmt.Println("CURRENT PATH VERT: ", n)
 		lcs.vPath = append(lcs.vPath, n)
 		if n == lcs.startPos {
 			break
@@ -108,5 +108,39 @@ func (lcs *LCSHelper) FindPathLCS() ([]int, error) {
 		lcs.vPath[i], lcs.vPath[j] = lcs.vPath[j], lcs.vPath[i]
 	}
 
-	return lcs.vPath, nil
+	output.Ppath = lcs.vPath
+	output.Pvisited = lcs.getVisitedVerticies()
+	output.AlgType = "Lowest Cost Search"
+	output.Pmoves = len(output.Ppath)
+	output.Pcost = lcs.getPathCost(output.Ppath)
+	if output.Pcost == -1 {
+		return output, errors.New("bfs can't find cost of path")
+	}
+	return output, nil
+}
+
+// getVisitedVerticies returns all verticies visited for output.
+func (lcs *LCSHelper) getVisitedVerticies() []int {
+	visited := make([]int, 0)
+	for i := 0; i < lcs.graph.GetNumVerticies(); i++ {
+		if lcs.vVisited[i] {
+			visited = append(visited, i)
+		}
+	}
+	return visited
+}
+
+// getPathCost returns the total cost of movement for output.
+func (lcs *LCSHelper) getPathCost(path []int) int {
+	totalCost := 0
+	for _, vert := range path {
+		fmt.Println("vert:", vert)
+		singleCost, err := lcs.graph.GetWeight(vert)
+		if err != nil {
+			return -1
+		}
+		fmt.Println("vert Cost:", singleCost.(int))
+		totalCost += singleCost.(int)
+	}
+	return totalCost
 }
