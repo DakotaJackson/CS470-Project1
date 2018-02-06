@@ -7,8 +7,10 @@ type MapSpec struct {
 	CurrTrMap [][]int
 	StartPosX int
 	StartPosY int
+	StartVert int
 	GoalPosX  int
 	GoalPosY  int
+	GoalVert  int
 	Width     int
 	Height    int
 }

@@ -1,6 +1,10 @@
 package dataStructs
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/DakotaJackson/CS470-Project1/src/internal/structs"
+)
 
 // Following is a graph which is used for the traversal algorithms.
 // 	It should be noted that basic functionality and ideas were referenced
@@ -16,7 +20,7 @@ type Graph struct {
 // EdgeHelper is a helper struct for info about edges
 type EdgeHelper struct {
 	size int
-	data map[interface{}]int
+	Data map[interface{}]int
 }
 
 // InitGraph creates a blank graph, with specified number of verticies.
@@ -147,7 +151,7 @@ func (g *Graph) GetWeight(verticy int) (interface{}, error) {
 	return nil, errors.New("can't get weight, verticy does not exist")
 }
 
-// DoVerticy executes the Do function on a verticy, which
+// DoVerticy executes the Do function on a verticy.
 func (g *Graph) DoVerticy(verticy int, f func(interface{})) error {
 	if verticy <= g.verticies {
 		g.edges[verticy].DoEdgeForVerticy(f)
@@ -156,9 +160,33 @@ func (g *Graph) DoVerticy(verticy int, f func(interface{})) error {
 	return errors.New("can't execute do, verticy does not exist")
 }
 
-// GetNumVerticies simply returns the number of verticies in the graph
+// GetNumVerticies simply returns the number of verticies in the graph.
 func (g *Graph) GetNumVerticies() int {
 	return g.verticies
+}
+
+// GetStartEndVerticies returns the start and end verticy number.
+func (g *Graph) GetStartEndVerticies(mapInfo structs.MapSpec) (int, int) {
+	vertNum := 0
+	startVertNum := 0
+	targetVertNum := 0
+	for i := 0; i < mapInfo.Height; i++ {
+		for j := 0; j < mapInfo.Width; j++ {
+			if i == mapInfo.StartPosY && j == mapInfo.StartPosX {
+				startVertNum = vertNum
+			}
+			if i == mapInfo.GoalPosY && j == mapInfo.GoalPosX {
+				targetVertNum = vertNum
+			}
+			vertNum++
+		}
+	}
+	return startVertNum, targetVertNum
+}
+
+// GetEdgesForVerticy returns the edges for a specified verticy.
+func (g *Graph) GetEdgesForVerticy(vertNum int) *EdgeHelper {
+	return g.edges[vertNum].GetEdges()
 }
 
 /*
@@ -177,15 +205,20 @@ func InitEdgeHelper() *EdgeHelper {
 
 // MakeConnection adds information to the edge needed for proper functionality.
 func (e *EdgeHelper) MakeConnection(value interface{}) {
-	e.data[value]++
+	e.Data[value]++
 	e.size++
 }
 
 // DoEdgeForVerticy executes a function on each connection for a verticy.
 func (e *EdgeHelper) DoEdgeForVerticy(f func(interface{})) {
-	for val, count := range e.data {
+	for val, count := range e.Data {
 		for ; count > 0; count-- {
 			f(val)
 		}
 	}
+}
+
+// GetEdges returns all the edges of the node.
+func (e *EdgeHelper) GetEdges() *EdgeHelper {
+	return e
 }

@@ -24,24 +24,31 @@ var (
 	mapFile       string
 )
 
+// TODO: CLEAN UP CODE
 func main() {
 	initFlg()
 	flag.Parse()
 
+	// makes the necessary struct from the map file for creating graph
 	mapInfo, err := gatherMapInfo(mapFile)
 
 	if err != nil {
 		log.Fatal("can't gather initial map info: ", err)
 		return
 	}
-	//fmt.Println(mapInfo)
 
+	// makes graph according to the provided map file mapInfo struct
 	graph, err := createGraph(mapInfo.OrigMap, mapInfo.Width, mapInfo.Height)
 
 	if err != nil {
 		log.Fatal("can't create graph from map 2d array", err)
 		return
 	}
+
+	// define x/y coords AND verticy number of start/goal positions
+	startVert, goalVert := graph.GetStartEndVerticies(mapInfo)
+	mapInfo.StartVert = startVert
+	mapInfo.GoalVert = goalVert
 
 	// run the proper command for each flag/algorithm needed
 	if allFlg {
@@ -62,7 +69,13 @@ func main() {
 		}
 		fmt.Println("MOVEMENT COST", cost)
 	} else if lowCostFlg {
+		alg := algorithms.InitLCS(mapInfo, graph)
+		path, err := alg.FindPathLCS()
+		if err != nil {
+			log.Fatal("error in finding lcs path: ", err)
+		}
 
+		fmt.Println("LCS PATH: ", path)
 	} else if gBestFirstFlg {
 
 	} else if aEuclideanFlg {
@@ -158,6 +171,7 @@ func gatherMapInfo(mapFile string) (structs.MapSpec, error) {
 		}
 		lCount++
 	}
+
 	// defines everything as a default, with values gathered from the map def.
 	return structs.MapSpec{
 		OrigMap:   mapArray,

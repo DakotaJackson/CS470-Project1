@@ -29,8 +29,7 @@ type BFSHelper struct {
 	vPaths   map[int][]int
 }
 
-// InitBFS creates all the necessary info from the graph&mapInfo then
-// 	executes the breadth first search
+// InitBFS creates all the necessary info from the graph&mapInfo.
 func InitBFS(mapInfo structs.MapSpec, graph dataStructs.Graph) *BFSHelper {
 	// create a new instance
 	helper := new(BFSHelper)
@@ -40,7 +39,8 @@ func InitBFS(mapInfo structs.MapSpec, graph dataStructs.Graph) *BFSHelper {
 	helper.stack = dataStructs.InitStack()
 	helper.graph = graph
 	// define the start and target verticies
-	helper.startPos, helper.targetPos = getGoals(mapInfo)
+	helper.startPos = mapInfo.StartVert
+	helper.targetPos = mapInfo.GoalVert
 
 	// init the needed helper variables
 	helper.vVisited = make([]bool, graph.GetNumVerticies())
@@ -121,25 +121,4 @@ func (bfs *BFSHelper) search(target int) {
 			return
 		}
 	}
-}
-
-// getGoals returns the number of the verticies for both the start and goal
-// 	positions based on the x/y coordinates in mapSpec.go.
-func getGoals(mapInfo structs.MapSpec) (int, int) {
-	// TODO: add this functionality
-	vertNum := 0
-	startVertNum := 0
-	targetVertNum := 0
-	for i := 0; i < mapInfo.Height; i++ {
-		for j := 0; j < mapInfo.Width; j++ {
-			if i == mapInfo.StartPosY && j == mapInfo.StartPosX {
-				startVertNum = vertNum
-			}
-			if i == mapInfo.GoalPosY && j == mapInfo.GoalPosX {
-				targetVertNum = vertNum
-			}
-			vertNum++
-		}
-	}
-	return startVertNum, targetVertNum
 }
