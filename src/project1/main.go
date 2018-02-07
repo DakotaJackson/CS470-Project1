@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -12,6 +11,7 @@ import (
 	"github.com/DakotaJackson/CS470-Project1/src/internal/algorithms"
 	"github.com/DakotaJackson/CS470-Project1/src/internal/dataStructs"
 	"github.com/DakotaJackson/CS470-Project1/src/internal/structs"
+	"github.com/DakotaJackson/CS470-Project1/src/internal/util"
 )
 
 var (
@@ -61,12 +61,14 @@ func main() {
 			log.Fatal("error in finding bfs path: ", err)
 		}
 		output.OrigMap = mapInfo.OrigMap
-		fmt.Println("ORIGMAP:\n", output.OrigMap)
-		fmt.Println("ALG:", output.AlgType)
-		fmt.Println("MOVES:", output.Pmoves)
-		fmt.Println("PATH:", output.Ppath)
-		fmt.Println("VISITED:", output.Pvisited)
-		fmt.Println("COST", output.Pcost)
+		// fmt.Println("ORIGMAP:\n", output.OrigMap)
+		// fmt.Println("ALG:", output.AlgType)
+		// fmt.Println("MOVES:", output.Pmoves)
+		// fmt.Println("PATH:", output.Ppath)
+		// fmt.Println("VISITED:", output.Pvisited)
+		// fmt.Println("COST", output.Pcost)
+
+		util.PrintOutput(output)
 	} else if lowCostFlg {
 		alg := algorithms.InitLCS(mapInfo, graph)
 		output, err := alg.FindPathLCS()
@@ -74,12 +76,14 @@ func main() {
 			log.Fatal("error in finding lcs path: ", err)
 		}
 		output.OrigMap = mapInfo.OrigMap
-		fmt.Println("ORIGMAP:\n", output.OrigMap)
-		fmt.Println("ALG:", output.AlgType)
-		fmt.Println("MOVES:", output.Pmoves)
-		fmt.Println("PATH:", output.Ppath)
-		fmt.Println("VISITED:", output.Pvisited)
-		fmt.Println("COST", output.Pcost)
+		// fmt.Println("ORIGMAP:\n", output.OrigMap)
+		// fmt.Println("ALG:", output.AlgType)
+		// fmt.Println("MOVES:", output.Pmoves)
+		// fmt.Println("PATH:", output.Ppath)
+		// fmt.Println("VISITED:", output.Pvisited)
+		// fmt.Println("COST", output.Pcost)
+
+		util.PrintOutput(output)
 	} else if gBestFirstFlg {
 
 	} else if aEuclideanFlg {

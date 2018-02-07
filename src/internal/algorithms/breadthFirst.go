@@ -2,7 +2,6 @@ package algorithms
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/DakotaJackson/CS470-Project1/src/internal/dataStructs"
 	"github.com/DakotaJackson/CS470-Project1/src/internal/structs"
@@ -146,12 +145,10 @@ func (bfs *BFSHelper) getVisitedVerticies() []int {
 func (bfs *BFSHelper) getPathCost(path []int) int {
 	totalCost := 0
 	for _, vert := range path {
-		fmt.Println("vert:", vert)
 		singleCost, err := bfs.graph.GetWeight(vert)
 		if err != nil {
 			return -1
 		}
-		fmt.Println("vert Cost:", singleCost.(int))
 		totalCost += singleCost.(int)
 	}
 	return totalCost
