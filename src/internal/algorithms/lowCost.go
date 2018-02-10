@@ -46,7 +46,7 @@ func InitLCS(mapInfo structs.MapSpec, graph dataStructs.Graph) *LCSHelper {
 	return helper
 }
 
-// FindPathLCS returns the path found from the lcs search algorithm.
+// FindPathLCS returns the output struct with path found from the lcs search algorithm.
 func (lcs *LCSHelper) FindPathLCS() (structs.OutputSpec, error) {
 	output := structs.OutputSpec{}
 	// as long as there is an item in the queue, execute the loop

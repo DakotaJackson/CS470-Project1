@@ -52,9 +52,9 @@ func printPath(output structs.OutputSpec) {
 			}
 			if isInSlice(vert, output.Ppath) {
 				if i == 10 {
-					line = line + " " + strconv.Itoa(i) + "|"
+					line = line + " " + costToType(i) + "|"
 				} else {
-					line = line + " " + strconv.Itoa(i) + " |"
+					line = line + " " + costToType(i) + " |"
 				}
 			} else {
 				line = line + "   |"
@@ -82,9 +82,9 @@ func printMap(output structs.OutputSpec) {
 				div = div + " "
 			}
 			if i == 10 {
-				line = line + " " + strconv.Itoa(i) + "|"
+				line = line + " " + costToType(i) + "|"
 			} else {
-				line = line + " " + strconv.Itoa(i) + " |"
+				line = line + " " + costToType(i) + " |"
 			}
 			div = div + "--- "
 		}
@@ -110,9 +110,9 @@ func printVisited(output structs.OutputSpec) {
 			}
 			if isInSlice(vert, output.Pvisited) {
 				if i == 10 {
-					line = line + " " + strconv.Itoa(i) + "|"
+					line = line + " " + costToType(i) + "|"
 				} else {
-					line = line + " " + strconv.Itoa(i) + " |"
+					line = line + " " + costToType(i) + " |"
 				}
 			} else {
 				line = line + "   |"
@@ -154,34 +154,34 @@ func printColor(output structs.OutputSpec) {
 				div = div + " "
 			}
 			if isInSlice(vert, output.Ppath) {
-				if i == 10 {
-					//line = " " + strconv.Itoa(i) + "|"
+				if i == 11 {
+					//line = " " + costToType(i) + "|"
 					fmt.Printf(" ")
-					pathC.Printf(strconv.Itoa(i))
+					pathC.Printf(costToType(i))
 					fmt.Printf("|")
 				} else {
-					//line = " " + strconv.Itoa(i) + " |"
+					//line = " " + costToType(i) + " |"
 					fmt.Printf(" ")
-					pathC.Printf(strconv.Itoa(i))
+					pathC.Printf(costToType(i))
 					fmt.Printf(" |")
 				}
 			} else if isInSlice(vert, output.Pvisited) {
-				if i == 10 {
-					//line = " " + strconv.Itoa(i) + "|"
+				if i == 11 {
+					//line = " " + costToType(i) + "|"
 					fmt.Printf(" ")
-					pathV.Printf(strconv.Itoa(i))
+					pathV.Printf(costToType(i))
 					fmt.Printf("|")
 				} else {
-					//line = " " + strconv.Itoa(i) + " |"
+					//line = " " + costToType(i) + " |"
 					fmt.Printf(" ")
-					pathV.Printf(strconv.Itoa(i))
+					pathV.Printf(costToType(i))
 					fmt.Printf(" |")
 				}
-			} else if i == 10 {
-				line = " " + strconv.Itoa(i) + "|"
+			} else if i == 11 {
+				line = " " + costToType(i) + "|"
 				fmt.Printf(line)
 			} else {
-				line = " " + strconv.Itoa(i) + " |"
+				line = " " + costToType(i) + " |"
 				fmt.Printf(line)
 			}
 
@@ -211,6 +211,26 @@ func printKey() {
 	fmt.Printf("| ")
 	fmt.Println("Unvisited Verticies = White")
 	fmt.Println(" ------------------------------------- ")
+}
+
+func costToType(cost int) string {
+	switch cost {
+	case 0:
+		return "W"
+	case 1:
+		return "R"
+	case 2:
+		return "f"
+	case 4:
+		return "F"
+	case 5:
+		return "h"
+	case 7:
+		return "r"
+	case 10:
+		return "M"
+	}
+	return ""
 }
 
 func isInSlice(s int, sl []int) bool {

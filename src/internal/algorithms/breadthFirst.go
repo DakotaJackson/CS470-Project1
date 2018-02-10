@@ -57,7 +57,7 @@ func InitBFS(mapInfo structs.MapSpec, graph dataStructs.Graph) *BFSHelper {
 	return helper
 }
 
-// FindPathBFS returns an integer slice of the verticies traveled from start to target.
+// FindPathBFS returns the output struct with path from start to target.
 func (bfs *BFSHelper) FindPathBFS() (structs.OutputSpec, error) {
 	output := structs.OutputSpec{}
 	// can't reach target (eg. surrounded by water)

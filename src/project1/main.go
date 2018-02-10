@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -20,12 +21,11 @@ var (
 	lowCostFlg    bool
 	gBestFirstFlg bool
 	aEuclideanFlg bool
-	aOctileFlg    bool
+	aManhattanFlg bool
 	mapFile       string
 )
 
 // TODO: CLEAN UP CODE
-// TODO: Ensure visited verticies are good
 func main() {
 	initFlg()
 	flag.Parse()
@@ -53,7 +53,7 @@ func main() {
 
 	// run the proper command for each flag/algorithm needed
 	if allFlg {
-
+		fmt.Println("adding functionality....")
 	} else if breadthFlg {
 		alg := algorithms.InitBFS(mapInfo, graph)
 		output, err := alg.FindPathBFS()
@@ -61,12 +61,6 @@ func main() {
 			log.Fatal("error in finding bfs path: ", err)
 		}
 		output.OrigMap = mapInfo.OrigMap
-		// fmt.Println("ORIGMAP:\n", output.OrigMap)
-		// fmt.Println("ALG:", output.AlgType)
-		// fmt.Println("MOVES:", output.Pmoves)
-		// fmt.Println("PATH:", output.Ppath)
-		// fmt.Println("VISITED:", output.Pvisited)
-		// fmt.Println("COST", output.Pcost)
 
 		util.PrintOutput(output)
 	} else if lowCostFlg {
@@ -76,20 +70,35 @@ func main() {
 			log.Fatal("error in finding lcs path: ", err)
 		}
 		output.OrigMap = mapInfo.OrigMap
-		// fmt.Println("ORIGMAP:\n", output.OrigMap)
-		// fmt.Println("ALG:", output.AlgType)
-		// fmt.Println("MOVES:", output.Pmoves)
-		// fmt.Println("PATH:", output.Ppath)
-		// fmt.Println("VISITED:", output.Pvisited)
-		// fmt.Println("COST", output.Pcost)
 
 		util.PrintOutput(output)
 	} else if gBestFirstFlg {
+		alg := algorithms.InitGBF(mapInfo, graph)
+		output, err := alg.FindPathGBF()
+		if err != nil {
+			log.Fatal("error in finding bfs path: ", err)
+		}
+		output.OrigMap = mapInfo.OrigMap
 
+		util.PrintOutput(output)
 	} else if aEuclideanFlg {
+		alg := algorithms.InitAES(mapInfo, graph)
+		output, err := alg.FindPathAES()
+		if err != nil {
+			log.Fatal("error in finding ams path: ", err)
+		}
+		output.OrigMap = mapInfo.OrigMap
 
-	} else if aOctileFlg {
+		util.PrintOutput(output)
+	} else if aManhattanFlg {
+		alg := algorithms.InitAMS(mapInfo, graph)
+		output, err := alg.FindPathAMS()
+		if err != nil {
+			log.Fatal("error in finding ams path: ", err)
+		}
+		output.OrigMap = mapInfo.OrigMap
 
+		util.PrintOutput(output)
 	}
 }
 
@@ -208,6 +217,6 @@ func initFlg() {
 	flag.BoolVar(&lowCostFlg, "lowCost", false, "run for lowest cost algorithm")
 	flag.BoolVar(&gBestFirstFlg, "gBestFirst", false, "run for greedy best first algorithm")
 	flag.BoolVar(&aEuclideanFlg, "aEuclidean", false, "run for A* w/Euclidean heuristic algorithm")
-	flag.BoolVar(&aOctileFlg, "aOctile", false, "run for A* w/Octile heuristic algorithm")
+	flag.BoolVar(&aManhattanFlg, "aManhattan", false, "run for A* w/Manhattan heuristic algorithm")
 	flag.StringVar(&mapFile, "map", "", "specify the map file to build from")
 }

@@ -24,14 +24,18 @@ go build -o ./bin/pathfind ./src/project1/
     - lowCost
     - gBestFirst
     - aEuclidean
-    - aOctile
+    - aManhattan
     - all
 * Use the `-map` flag with a string denoting the map.txt file to use
 * No need to pipe output, program will auto-create and generate it for you
 ```
 ./bin/pathfind -map p1Map.txt -[desiredflag]
 ```
+* Or you can simply use the pre-built binary in the same way like so
+```
+./djProject1 -map p1Map.txt -[desiredflag]
+```
 * Notes 
-    - the `-all` flag will run and create output for each of the flags before
+    - TODO: the `-all` flag will run and create output for each of the flags before
     - output will be generated in the `tmp/` directory
     - only allowed to move NSEW
